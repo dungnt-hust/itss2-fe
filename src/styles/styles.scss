@@ -1,0 +1,16 @@
+@import "tailwind.scss";
+@import "fonts";
+@import "antd.scss";
+
+body {
+  scroll-behavior: smooth;
+  @apply scrollbar scrollbar-w-3 max-sm:scrollbar-w-2 scrollbar-track-gray-300 scrollbar-thumb-gray-600 scrollbar-thumb-rounded scroll-smooth;
+}
+
+.gradient-bg1 {
+  background: linear-gradient(90deg, #fff6f6 0.18%, rgba(255, 66, 66, 0.74) 50.45%, rgba(255, 105, 108, 0) 99.88%);
+}
+
+.gradient-bg2 {
+  background: rgba(152, 147, 147, 0.5);
+}
