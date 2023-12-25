@@ -1,65 +1,54 @@
-import { SIGN_MESSAGE } from "@/constants/auth"
 import { Service } from "@/services/app.service"
-import { modal } from "@/utils/modal"
 import { storageKeys } from "@constants/storage"
-import { message, Modal } from "antd"
-import jwtDecode from "jwt-decode"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
-export const useUser = create<Partial<User>>()(
+export const useUser = create<{ token?: string; id?: number; login?: any; reset?: any }>()(
   persist(
     (set, get) => ({
       reset() {
         set({
           token: undefined,
-          address: undefined,
+          id: undefined,
         })
       },
 
-      async login(signer) {
-        // Check connection
-        if (!signer) {
-          return false
-        }
-        const account = await signer.getAddress()
-        const { address } = get()
-        // Check if changed account
-        const isChangedAccount = account && address && address?.toLowerCase() !== account.toLowerCase()
-        if (isChangedAccount) {
-          get().reset?.()
-        }
-        // Check token exp
-        const { token } = get()
-        const isTokenValid = token && jwtDecode<{ exp: number }>(token).exp * 1000 > Date.now()
-        if (isTokenValid) {
-          return true
-        }
-        get().reset?.()
-        const { data: nonce } = await Service.auth.getNonce(account)
-        // Check nonce
-        if (!nonce) {
-          message.error("Failed to get nonce")
-          return false
-        }
+      async login({ username, password }: { username: any; password: any }) {
         try {
-          modal.loading("Please confirm the sign message on your wallet to log in")
-          const sign = await signer.signMessage(`${SIGN_MESSAGE} ${nonce}`)
-          const { data, statusText } = await Service.auth.login(account, sign)
-          if (!data) {
-            message.error(statusText)
-            return false
+          const user = (await Service.auth.login(username, password)) as any
+
+          if (user) {
+            set({
+              token: user?.data?.token,
+              id: user?.data?.user_info?.id,
+            })
           }
-          message.success("Logged in successfully")
-          const { user_info, token } = data
-          set({ ...user_info, token })
           return true
-        } catch (error) {
-          console.log(error)
-          message.error("Sign message failed")
+        } catch (err) {
           return false
-        } finally {
-          Modal.destroyAll()
+        }
+      },
+
+      setUser(user: any) {
+        set({ ...user })
+      },
+
+      async register({ username, password }: { username: any; password: any }) {
+        try {
+          // const user = (await Service.auth.register(
+
+          // )) as any
+
+          // if (user) {
+          //   set({
+          //     ...user?.data,
+          //   })
+
+          //   return user?.data
+          // }
+          return false
+        } catch (err) {
+          return false
         }
       },
 

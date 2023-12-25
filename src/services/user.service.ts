@@ -29,4 +29,18 @@ export class UserService {
       data,
     })
   }
+  getUserInfo(params: any) {
+    return axiosInstance.request({
+      method: "GET",
+      url: "/user/get",
+      params,
+    })
+  };
+  edit(data: any) {
+    return axiosInstance.request({
+      method: "POST",
+      url: "/user/update",
+      data,
+    })
+  }
 }

@@ -1,10 +1,12 @@
 import { useSearch } from "@/hooks/user/search"
 import { Service } from "@/services/app.service"
 import { Button, Checkbox, Select } from "antd"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
 const TimKiemPage = () => {
   const { listResult, submitSearch } = useSearch()
+  const router = useRouter()
 
   const handleLike = async (user_id: any) => {
     const res = await Service.user.like({ user_id })
@@ -12,7 +14,7 @@ const TimKiemPage = () => {
 
   const [hobby, setHobby] = useState([])
   const [city, setCity] = useState(1)
-  const [ageStart, setAgeStart] = useState(20)
+  const [ageStart, setAgeStart] = useState(15)
   const [ageEnd, setAgeEnd] = useState(20)
   const [gender, setGender] = useState(1)
   const options: any = [
@@ -83,7 +85,7 @@ const TimKiemPage = () => {
     })
   }
 
-  useEffect(() => {}, [])
+  useEffect(() => { }, [])
 
   return (
     <div className="p-6">
@@ -114,7 +116,7 @@ const TimKiemPage = () => {
             <div>Tuổi</div>
             <div>
               <Select
-                defaultValue="20"
+                defaultValue="15"
                 style={{ width: 70 }}
                 options={[
                   { value: "15", label: "15" },
@@ -125,7 +127,7 @@ const TimKiemPage = () => {
                 onChange={handleChangeAgeStart}
               />
               <Select
-                defaultValue="30"
+                defaultValue="20"
                 style={{ width: 70 }}
                 options={[
                   { value: "20", label: "20" },
@@ -195,11 +197,11 @@ const TimKiemPage = () => {
           </div>
           <div className="grid grid-cols-6 gap-6 max-w-[100rem] mx-auto">
             {listResult?.data.map((value: any, index: any) => (
-              <div key={index} className="border border-solid border-black">
+              <div onClick={() => router.push(`/activity/${value.id}`)} key={index} className="border border-solid border-black cursor-pointer">
                 <img src={value.avatar} className="w-full aspect-square object-cover mb-2" alt="" />
                 <div className="p-2 flex flex-col gap-2">
                   <div>
-                    {value.fullname} <span className="h-3 w-3 rounded-full inline-block bg-green-500"></span>
+                    {value.fullname} <span className="h-3 w-3 rounded-full inline-block bg-green-500 "></span>
                   </div>
                   <div>{value.age}</div>
                   <div>{value.city_name || "Ha Noi"} </div>

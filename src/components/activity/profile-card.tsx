@@ -1,7 +1,9 @@
 import { Avatar } from "antd"
 import { FC } from "react"
 
-interface IProps {}
+interface IProps {
+  profile: {}
+}
 
 const ProfileCard: FC<IProps> = () => {
   return (

@@ -1,5 +1,6 @@
 import useTrending from "@/hooks/user/trending";
-import useGetListLike from "@/hooks/user/use-get-list-like"
+import { Service } from "@/services/app.service";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react"
 
 const KetQuaPage = () => {
@@ -8,6 +9,8 @@ const KetQuaPage = () => {
 
   const [trending, setTrending] = useState(0)
   // let trending = 0;
+
+  const router = useRouter();
 
 
   console.log(listTrending);
@@ -59,6 +62,10 @@ const KetQuaPage = () => {
     console.log("current page: " + currentPage);
 
   }
+  
+  const handleLike = async (user_id: any) => {
+    const res = await Service.user.like({ user_id })
+  }
 
   useEffect(() => {
 
@@ -67,7 +74,7 @@ const KetQuaPage = () => {
 
   return (
     <div>
-      <div className=" flex text-white text-xl font-bold items-center px-6 h-11 bg-[linear-gradient(90deg,_#353434_16.7%,_rgba(255,_66,_66,_0.74)_54.6%,_rgba(255,_105,_108,_0.00)_99.88%);]">
+      <div className=" flex text-white text-xl font-bold items-center px-6 h-11 bg-[linear-gradient(90deg,_#353434_16.7%,_rgba(255,_66,_66,_0.74)_54.6%,_rgba(255,_105,_108,_0.00)_99.88%)]">
         De xuat
       </div>
       <div className="p-6">
@@ -87,15 +94,19 @@ const KetQuaPage = () => {
               fill="black"
             />
           </svg>
-          <div className="flex items-center gap-10">
-            <img src={listTrending?.data[trending].avatar} className="h-80 w-56 object-fill" alt="" />
+          <div className="flex items-center gap-10" >
+            <div onClick={()=> router.push(`/activity/${listTrending?.data[trending]?.id}`)} className="  cursor-pointer">
+              <img  src={listTrending?.data[trending]?.avatar} className="w-fit max-w-lg max-h-[600px] " alt="" />
+            </div>
+          
+            {/* h-80 w-56 object-fill */}
             <div className="p-2 flex flex-col gap-2">
               <div>
               {listTrending?.data[trending].fullname} <span className="h-3 w-3 rounded-full inline-block bg-green-500"></span>
               </div>
-              <div>{listTrending?.data[trending].age}</div>
-              <div>{listTrending?.data[trending].city_name}</div>
-              <div>{listTrending?.data[trending].description}</div>
+              <div>{listTrending?.data[trending]?.age}</div>
+              <div>{listTrending?.data[trending]?.city_name}</div>
+              <div>{listTrending?.data[trending]?.description}</div>
               <div className="flex items-center gap-6 w-full">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path
@@ -103,6 +114,8 @@ const KetQuaPage = () => {
                     fill="#222222"
                     stroke="#222222"
                     strokeWidth="2"
+                    className="cursor-pointer"
+                    onClick={() => handleLike(listTrending?.data[trending].id)}
                   />
                 </svg>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -134,8 +147,8 @@ const KetQuaPage = () => {
         </div>
         <div className="grid grid-cols-6 gap-6 max-w-[100rem] mx-auto"  >
           {listTrending?.data.map((value: any, index:any) => (
-            <div key={index} className="border border-solid border-black">
-              <img src={value.avatar} className="w-full aspect-square object-cover mb-2" alt="" />
+            <div key={index} className="border border-solid border-black ">
+              <img onClick={()=>router.push(`/activity/${value.id}`)} src={value.avatar} className="w-full aspect-square object-cover mb-2 cursor-pointer" alt="" />
               <div className="p-2 flex flex-col gap-2">
                 <div>
                   {value.fullname} <span className="h-3 w-3 rounded-full inline-block bg-green-500"></span>
@@ -150,6 +163,8 @@ const KetQuaPage = () => {
                       fill="#222222"
                       stroke="#222222"
                       strokeWidth="2"
+                      className="cursor-pointer"
+                      onClick={() => handleLike(value.id)}
                     />
                   </svg>
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
